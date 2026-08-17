@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> To-Do List</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+        }
+
+        /* Main Application Box */
+        .app-box {
+            width: 450px;
+            margin: 60px auto;
+            background: #1c1c1c;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px #ff0000;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff3333;
+            text-shadow: 0 0 10px red;
+        }
+
+        h3 {
+            text-align: center;
+            color: #ffd700;
+        }
+
+        /* Input Box */
+        .input-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        #taskInput {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ff3333;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            outline: none;
+        }
+
+        #addBtn {
+            padding: 12px 18px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #addBtn:hover {
+            background: #cc0000;
+        }
+
+        /* Filter Buttons */
+        .filter-box {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .filter-box button {
+            padding: 9px 14px;
+            margin: 4px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #333;
+            color: white;
+        }
+
+        .filter-box button:hover {
+            background: #ff0000;
+        }
+
+        /* Task List */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #292929;
+            margin: 8px 0;
+            padding: 12px;
+            border-left: 5px solid #ff0000;
+            border-radius: 5px;
+        }
+
+        .task-text {
+            cursor: pointer;
+        }
+
+        /* Completed Task */
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        /* Delete Button */
+        .delete-btn {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #990000;
+        }
+
+        /* Clear Completed */
+        #clearBtn {
+            width: 100%;
+            padding: 12px;
+            background: #ffd700;
+            color: black;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #clearBtn:hover {
+            background: #ffb700;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Application Box -->
+    <div class="app-box">
+
+        <h1>🤖</h1>
+        <h3>My To-Do Application</h3>
+
+        <!-- Input Box -->
+        <div class="input-box">
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Enter your task..."
+            >
+
+            <button id="addBtn">ADD</button>
+        </div>
+
+        <!-- Filter Box -->
+        <div class="filter-box">
+
+            <button id="allBtn">ALL</button>
+
+            <button id="activeBtn">ACTIVE</button>
+
+            <button id="completedBtn">COMPLETED</button>
+
+        </div>
+
+        <!-- Task List -->
+        <ul id="taskList"></ul>
+
+        <!-- Clear Completed Box -->
+        <button id="clearBtn">
+            CLEAR COMPLETED
+        </button>
+
+        <div class="footer">
+            
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Get HTML elements
+        let taskInput = document.getElementById("taskInput");
+        let addBtn = document.getElementById("addBtn");
+        let taskList = document.getElementById("taskList");
+
+        let allBtn = document.getElementById("allBtn");
+        let activeBtn = document.getElementById("activeBtn");
+        let completedBtn = document.getElementById("completedBtn");
+        let clearBtn = document.getElementById("clearBtn");
+
+
+        // ADD TASK
+        addBtn.addEventListener("click", function () {
+
+            let task = taskInput.value.trim();
+
+            if (task === "") {
+                alert("Please enter a task!");
+                return;
+            }
+
+            // Create li
+            let li = document.createElement("li");
+
+            // Create span
+            let span = document.createElement("span");
+            span.textContent = task;
+            span.className = "task-text";
+
+            // Create delete button
+            let deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Delete";
+            deleteBtn.className = "delete-btn";
+
+
+            // COMPLETE TASK
+            span.addEventListener("click", function () {
+
+                span.classList.toggle("completed");
+
+            });
+
+
+            // DELETE TASK
+            deleteBtn.addEventListener("click", function () {
+
+                li.remove();
+
+            });
+
+
+            // Add span and button inside li
+            li.appendChild(span);
+            li.appendChild(deleteBtn);
+
+            // Add li inside ul
+            taskList.appendChild(li);
+
+            // Clear input
+            taskInput.value = "";
+
+        });
+
+
+        // ALL TASKS
+        allBtn.addEventListener("click", function () {
+
+            let tasks = document.querySelectorAll("#taskList li");
+
+            tasks.forEach(function (task) {
+
+                task.style.display = "flex";
+
+            });
+
+        });
+
+
+        // ACTIVE TASKS
+        activeBtn.addEventListener("click", function () {
+
+            let tasks = document.querySelectorAll("#taskList li");
+
+            tasks.forEach(function (task) {
+
+                let text = task.querySelector(".task-text");
+
+                if (text.classList.contains("completed")) {
+
+                    task.style.display = "none";
+
+                } else {
+
+                    task.style.display = "flex";
+
+                }
+
+            });
+
+        });
+
+
+        // COMPLETED TASKS
+        completedBtn.addEventListener("click", function () {
+
+            let tasks = document.querySelectorAll("#taskList li");
+
+            tasks.forEach(function (task) {
+
+                let text = task.querySelector(".task-text");
+
+                if (text.classList.contains("completed")) {
+
+                    task.style.display = "flex";
+
+                } else {
+
+                    task.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+
+        // CLEAR COMPLETED TASKS
+        clearBtn.addEventListener("click", function () {
+
+            let tasks = document.querySelectorAll("#taskList li");
+
+            tasks.forEach(function (task) {
+
+                let text = task.querySelector(".task-text");
+
+                if (text.classList.contains("completed")) {
+
+                    task.remove();
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>
